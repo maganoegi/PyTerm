@@ -300,18 +300,17 @@ def parse_words(words):
 
             i += 2
         
-        elif word == "duplicate": 
+        elif word == "duplicate": # TODO: When more than 2 equal files, it reads them 2+ times
             if isNotArgumented(words[i:]): break # TODO: include errorMessage into isNotArgumented() calls
             results = cmd.duplicate(words[i + 1])
-            print(results)
+
+            # print(results)
             res_string = ""
             for result in results:
-                res_string += str(result[-1]) + " "
+                res_string += "Duplicates: " + str(result[-1] + 1) + " "
                 for k in range(len(result) - 1):
                     res_string += result[k] + " "
                 res_string += "\n"
-
-
 
             std._out_ = res_string
             i += 1
