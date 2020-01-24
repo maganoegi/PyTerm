@@ -45,7 +45,7 @@ __________________________________________
 ?> 
 ```
 
-# General Organisation
+# General Code Organisation
 The information flows in the following fashion:
 ```c
     +------------------------+
@@ -81,6 +81,12 @@ The information flows in the following fashion:
 ```
 Another file, __.platonovrc__, imitates the function of __.bashrc__. It is generated upon first execution of the script, and contains _aliases_ in a __json__ format.
 
+The general idea is: a line is decomposed into "words". These words then are parsed one by one, checking whether they are a valid command. If "flags" are possible, the "words" that follow are checked as well, in order to include them into the expression. If at any point an error is encountered, __stderr__ is written to and the program stops - not without displaying what the error is! If a command is run successfully, the output is written to the __stdout__.
+
+Once a line has been processed without fail and the resulting __stdout__ is printed onto the terminal (provided it's not empty).
+
+
+
 # Commands
 Here is a list of commands that my shell supports, as well as a short description and possible configurations. __Note: since this is not a fully implemented shell! It has its limitations.__
 
@@ -90,9 +96,9 @@ Here is a list of commands that my shell supports, as well as a short descriptio
     * ``` cd PATH ``` 
 * __mkdir:__ creates an empty directory
     * ``` mkdir PATH ```
-* __rm:__ removes a file. Use the __-r__ flag to delete a directory recursively (meaning all of its contents).
-    * ``` rm FILE ```
-    * ``` rm -r DIRECTORY ```
+* __rm:__ removes a file. Use the __-r__ flag to delete a directory recursively (meaning all of its contents). Multiple files can be deleted at the same time.
+    * ``` rm FILE [FILE2] [FILE3] ```
+    * ``` rm -r DIRECTORY [FILE] [DIRECTORY2] ```
 * __mv:__ moves a file to a given path. Is also used to rename objects.
     * ``` mv SOURCE DESTINATION ```
 * __ls:__ lists the contents of the current working directory. Use the __-l__ flag to also display the permissions of the files.
@@ -101,8 +107,8 @@ Here is a list of commands that my shell supports, as well as a short descriptio
     * ``` echo PARAM ```
 * __cat:__ prints the contents of a file to the terminal.
     * ``` cat FILE ```
-* __touch:__ creates a regular, empty file.
-    * ``` touch PATH ```
+* __touch:__ creates a regular, empty file. Multiple files can be created at the same time.
+    * ``` touch PATH [PATH2] [PATH3] ```
 * __cp:__ copies the contents of a file into another. Use the __-r__ flag to copy a directory recursively (meaning all of its contents).
     * ``` cp FILE DESTINATION ```
     * ``` cp -r DIRECTORY DESTINATION ```
@@ -123,7 +129,10 @@ Here is a list of commands that my shell supports, as well as a short descriptio
     * ``` same FILE FILE ```
 * __duplicate:__ displays the paths of identical files in the arborescence.
     * ``` duplicate PATH ```
+* __all-cmd:__ displays a list of abovementioned commands.
+
 #### Special Connectors
+
 * __|__ allows to create a pipeline for stdout of one expression to the stdin of another.
     * ``` cat hello.txt | wc -c ```
 * __>__ writes/redirects the stdout of an expression into a file
