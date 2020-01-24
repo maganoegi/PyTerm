@@ -113,7 +113,7 @@ def count_flags(words):
 
 def getAliases():
     aliases = ""
-    path = os.getcwd() + ".platonovrc"
+    path = std.root + "/.platonovrc"
     if not os.path.isfile(path):
         cmd.touch(path, "{}")
     # extract existing
