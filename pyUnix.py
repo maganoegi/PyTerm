@@ -9,6 +9,7 @@ import std
 if __name__ == '__main__':
 
     startup_message()
+    std.root = os.getcwd()
 
     while True:
 

@@ -113,7 +113,7 @@ def count_flags(words):
 
 def getAliases():
     aliases = ""
-    path = ".platonovrc"
+    path = os.getcwd() + ".platonovrc"
     if not os.path.isfile(path):
         cmd.touch(path, "{}")
     # extract existing
@@ -300,8 +300,21 @@ def parse_words(words):
 
             i += 2
         
-        elif word == "duplicate": # TODO: duplicate
-            pass
+        elif word == "duplicate": 
+            if isNotArgumented(words[i:]): break # TODO: include errorMessage into isNotArgumented() calls
+            results = cmd.duplicate(words[i + 1])
+            print(results)
+            res_string = ""
+            for result in results:
+                res_string += str(result[-1]) + " "
+                for k in range(len(result) - 1):
+                    res_string += result[k] + " "
+                res_string += "\n"
+
+
+
+            std._out_ = res_string
+            i += 1
         
         elif word == "|":
             std._in_ = std._out_

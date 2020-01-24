@@ -180,7 +180,81 @@ def same(first_path, second_path):
     # compare the two
     result = "true" if first_content == second_content else "false"
     
-    return result    
+    return result 
+
+
+def duplicate(basePath):
+    # initialization
+    paths = []
+
+    ignored = 0
+
+    lines = []
+    words = []
+    chars = []
+
+    potential_paths = []
+
+    # get the paths, contents, lengths of all the files in the arborescence
+    for root, dirs, files in os.walk("."):
+        for file_path in files:
+            path = os.path.abspath(root) + "/" + file_path
+            
+            try:
+                f = open(path, "r")
+                content = f.read()
+                paths.append(path)
+
+                nb_lines, nb_words, nb_chars = wc(path)
+                lines.append(nb_lines)
+                words.append(nb_words)
+                chars.append(nb_chars)
+
+                f.close()
+
+            except: # if files cannot be parsed by .read() - we skip them.
+                ignored += 1
+                pass 
+
+
+    # get the "potential" matches by comparing the lengths
+    for i in range(len(lines) - 1):
+        similar = [ paths[i] ]
+        for j in range(i+1, len(lines)):
+            # once nb_lines match, we compare the nb_words, and if those match, we see the nb_characters
+            if lines[i] == lines[j]:
+                if words[i] == words[j]:
+                    if chars[i] == chars[j]:
+                        similar.append(paths[j])
+                        potential_paths.append(similar)
+
+        if len(similar) == 1: similar = []
+
+    print(potential_paths)
+
+    # check the "potential" matches for real similarities
+    # decided to open up those files again, in order to save stack space
+    all_matches = []
+    for potential_path in potential_paths:
+        matches = [ potential_path[0] ]
+        matches_for_this = 0
+        comparator = potential_path[0]
+
+        f1 = open(potential_path[0], "r")
+        c1 = f1.read()
+        f1.close()
+        for i in range(len(potential_path[1:])):
+            f2 = open(potential_path[i], "r")
+            c2 = f2.read()
+            f2.close
+            if c1 == c2:
+                matches_for_this += 1
+                matches.append(potential_path[i])
+        if matches_for_this != 0: 
+            matches.append(matches_for_this)
+            all_matches.append(matches)
+
+        return all_matches
 
 
 # def tree(path):
