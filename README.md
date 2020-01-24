@@ -85,6 +85,8 @@ The general idea is: a line is decomposed into "words". These words then are par
 
 Once a line has been processed without fail and the resulting __stdout__ is printed onto the terminal (provided it's not empty).
 
+The library used for system operations is python's __os__ library.
+
 
 
 # Commands
