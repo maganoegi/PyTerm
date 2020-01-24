@@ -54,6 +54,19 @@ def cp(source, destination, recursive):
     else:
         touch(destination, cat(source))
 
+def mv(source, destination):
+    # extract the contents of the source file
+    file2read = open(source, "r")
+    content = file2read.read()  
+    file2read.close
+
+    # write to the destination file
+    file2write = open(destination, "w+")
+    file2write.write(content)    
+    file2write.close
+
+    # delete the source file
+    rm(source, False)
 
 def rm(path, recursive):
     if recursive:

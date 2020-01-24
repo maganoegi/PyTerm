@@ -166,8 +166,17 @@ def parse_words(words):
             i += incr 
             
         
-        elif word == "mv": # TODO: mv
-            pass
+        elif word == "mv": # TODO: path validation
+            # Checks whether both SOURCE and DESTINATION mentionned and are valid
+            if not (nextArgExists(i, words) and nextArgExists(i+1, words)):
+                std._err_ = "Please respect the following format: mv SOURCE DESTINATION"
+                break
+            
+            source = words[i+1]
+            destination = words[i+2]
+            cmd.mv(source, destination)
+
+            i += 2
         
         elif word == "ls":
             containsPermissions = nextArgExists(i, words) and words[i + 1] == "-l"
