@@ -60,7 +60,7 @@ def mv(source, destination):
     content = file2read.read()  
     file2read.close
 
-    # write to the destination file
+    # create and write to the destination file
     file2write = open(destination, "w+")
     file2write.write(content)    
     file2write.close
@@ -164,9 +164,23 @@ def alias(word, command):
         json_aliases = json.dumps(aliases)
         file.write(json_aliases)
         file.close()
+
+
+def same(first_path, second_path):
+    # extract the contents of the first_path file
+    firstFile = open(first_path, "r")
+    first_content = firstFile.read()  
+    firstFile.close
+
+    # extract the contents of the second_path file
+    secondFile = open(second_path, "r")
+    second_content = secondFile.read()  
+    secondFile.close
+
+    # compare the two
+    result = "true" if first_content == second_content else "false"
     
-
-
+    return result    
 
 
 # def tree(path):
@@ -188,7 +202,5 @@ def alias(word, command):
 #                 pre = "│"
 #                 if dirCount > 0:
 #                     pre =  "├"
-#             else:
-#                 pre = 
 #             print('{}{}{}'.format(pre + subindent + preindent, post, f))
         

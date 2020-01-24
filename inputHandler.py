@@ -289,8 +289,16 @@ def parse_words(words):
         elif word == "grep": # TODO: grep
             pass
         
-        elif word == "same": # TODO: same
-            pass
+        elif word == "same":
+            if not (nextArgExists(i, words) and nextArgExists(i+1, words)):
+                std._err_ = "Please respect the following format: same FILE1 FILE2"
+                break
+            
+            first = words[i+1]
+            second = words[i+2]
+            std._out_ = cmd.same(first, second)
+
+            i += 2
         
         elif word == "duplicate": # TODO: duplicate
             pass

@@ -114,7 +114,7 @@ Here is a list of commands that my shell supports, as well as a short descriptio
 * __cp:__ copies the contents of a file into another. Use the __-r__ flag to copy a directory recursively (meaning all of its contents).
     * ``` cp FILE DESTINATION ```
     * ``` cp -r DIRECTORY DESTINATION ```
-* __wc:__ counts the lines/words/characters in a given file. Controlled with __-l, -w, -c__ flags respectively. My implementation allows for the same degree of freedom as bash (see below). If no flags used, all are activated.
+* __wc:__ counts the lines, words, characters in a given file. Controlled with __-l, -w, -c__ flags respectively. My implementation allows for the same degree of freedom as bash (see below). If no flags used, all are activated.
     * ``` wc FILE ```
     * ``` wc -l -w -c FILE ```
     * ``` wc -lwc -lc FILE ```
