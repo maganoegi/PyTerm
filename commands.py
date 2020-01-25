@@ -230,8 +230,6 @@ def duplicate(basePath):
 
         if len(similar) == 1: similar = []
 
-    # print(potential_paths)
-    # print("\n")
 
     # check the "potential" matches for real similarities
     # decided to open up those files again, in order to save stack space
@@ -241,9 +239,6 @@ def duplicate(basePath):
         matches_for_this = 0
         comparator = potential_path[0]
 
-        # f1 = open(potential_path[0], "r")
-        # c1 = f1.read()
-        # f1.close()
         for i in range(1, len(potential_path)):
             areSame = same(comparator, potential_path[i])
             if areSame == "true":
@@ -253,6 +248,7 @@ def duplicate(basePath):
         if matches_for_this != 0: 
             matches.append(matches_for_this)
             all_matches.append(matches)
+
 
     return all_matches
 
