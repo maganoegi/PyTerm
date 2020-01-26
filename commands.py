@@ -260,6 +260,22 @@ def grep(regex, path):
     std._err_ = "Invalid Path: {}".format(path) 
 
 
+def find(regex, path):
+    myRoot = os.path.abspath(path)
+    rootlen = len(myRoot)
+
+    result = ""
+
+    for root, dirs, files in os.walk(myRoot):
+
+        for file_path in files:
+            pathContains = re.search(regex, file_path)
+            if pathContains: result += (root + "/" + file_path + "\n")[rootlen:]
+    
+    return result
+            
+
+
 # def tree(path):
 #     dirCount = 0
 #     for root, dirs, files in os.walk(path):

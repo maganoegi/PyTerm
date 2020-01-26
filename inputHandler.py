@@ -169,27 +169,41 @@ def parse_words(words):
             path = std._out_
             cmd.tree(path)
         
-        elif word == "find": # TODO: find
-            pass
+        elif word == "find":
+            # Checks whether both REGEX and FILE mentionned and are valid
+            if not (nextArgExists(i, words) and nextArgExists(i+1, words)):
+                std._err_ = "Please respect the following format: find \"REGEX\" FILE"
+                break
+            
+            unPeeled, regEnd_index = extractRegex(words, i) # with ""
+            
+            if regEnd_index == 0: 
+                std._err_ = "Please respect the following format: find \"REGEX\" FILE"
+                break
+
+            path = words[-1]
+            isValid, peeled = regexValidation(unPeeled) # without ""
+            
+            if not isValid: 
+                std._err_  = "the regular expression is not valid. Please enclose the an expression to look for in simple or double quotes."
+                break
+            
+            std._out_ = cmd.find(peeled, path)
+
+            i += 2 + regEnd_index
         
+
         elif word == "grep":
             # Checks whether both REGEX and FILE mentionned and are valid
             if not (nextArgExists(i, words) and nextArgExists(i+1, words)):
                 std._err_ = "Please respect the following format: grep \"REGEX\" FILE"
                 break
             
-            regEnd_index = 0
-            for l in range(i+1, len(words) - 1):
-                last_char = words[l][-1]
-                if last_char == "\"" or last_char == "'":
-                    regEnd_index = l
-                    break
+            unPeeled, regEnd_index = extractRegex(words, i) # with ""
             
             if regEnd_index == 0: 
                 std._err_ = "Please respect the following format: grep \"REGEX\" FILE"
                 break
-
-            unPeeled = " ".join(words[i+1: regEnd_index + 1])
 
             path = words[-1]
             isValid, peeled = regexValidation(unPeeled) # without ""
@@ -201,6 +215,7 @@ def parse_words(words):
             std._out_ = cmd.grep(peeled, path)
 
             i += 2 + regEnd_index
+
         
         elif word == "same":
             if not (nextArgExists(i, words) and nextArgExists(i+1, words)):

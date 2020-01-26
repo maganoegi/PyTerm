@@ -139,3 +139,16 @@ def regexValidation(regex):
     
     return isValid, content
 
+
+def extractRegex(words, i):
+    regEnd_index = 0
+    for l in range(i+1, len(words) - 1):
+        last_char = words[l][-1]
+        if last_char == "\"" or last_char == "'":
+            regEnd_index = l
+            break
+
+    unPeeled = " ".join(words[i+1: regEnd_index + 1])
+
+    return unPeeled, regEnd_index
+
