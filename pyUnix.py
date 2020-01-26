@@ -1,4 +1,5 @@
 
+from lib import *
 from inputHandler import *
 from commands import *
 import std

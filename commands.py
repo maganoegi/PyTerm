@@ -2,9 +2,10 @@
 
 import sys
 import os
-import inputHandler as ih
+import lib
 import std
 import json
+import re
 
 def pwd():
     return os.getcwd()
@@ -99,7 +100,7 @@ def ls(perm = False):
 
         if perm:
             perm_val = str( oct( os.stat(item).st_mode ) )[-3:]
-            perm_str = ih.permission_val_2_string(perm_val, isDir)
+            perm_str = lib.permission_val_2_string(perm_val, isDir)
             item = perm_str + " " + item
 
 
@@ -178,9 +179,7 @@ def same(first_path, second_path):
     secondFile.close
 
     # compare the two
-    result = "true" if first_content == second_content else "false"
-    
-    return result 
+    return first_content == second_content 
 
 
 def duplicate(basePath):
@@ -193,10 +192,11 @@ def duplicate(basePath):
     words = []
     chars = []
 
-    potential_paths = []
-
+    matches = []
+    myRoot = os.path.abspath(basePath)
+    rootlen = len(myRoot)
     # get the paths, contents, lengths of all the files in the arborescence
-    for root, dirs, files in os.walk("."):
+    for root, dirs, files in os.walk(myRoot):
         for file_path in files:
             path = os.path.abspath(root) + "/" + file_path
             
@@ -217,40 +217,47 @@ def duplicate(basePath):
                 pass 
 
 
-    # get the "potential" matches by comparing the lengths
+    validated = [False] * len(lines) # allows us to avoid double recalculation and double results
     for i in range(len(lines) - 1):
-        similar = [ paths[i] ]
-        for j in range(i+1, len(lines)):
-            # once nb_lines match, we compare the nb_words, and if those match, we see the nb_characters
-            if lines[i] == lines[j]:
-                if words[i] == words[j]:
-                    if chars[i] == chars[j]:
-                        similar.append(paths[j])
-                        potential_paths.append(similar)
-
-        if len(similar) == 1: similar = []
-
-
-    # check the "potential" matches for real similarities
-    # decided to open up those files again, in order to save stack space
-    all_matches = []
-    for potential_path in potential_paths:
-        matches = [ potential_path[0] ]
-        matches_for_this = 0
-        comparator = potential_path[0]
-
-        for i in range(1, len(potential_path)):
-            areSame = same(comparator, potential_path[i])
-            if areSame == "true":
-                matches_for_this += 1
-                matches.append(potential_path[i])
-      
-        if matches_for_this != 0: 
-            matches.append(matches_for_this)
-            all_matches.append(matches)
+        if not validated[i]:
+            nb_matched = 0
+            similar = [ paths[i] ]
+            for j in range(i+1, len(lines)):
+                if not validated[j]:
+                # once nb_lines match, we compare the nb_words, and if those match, we see the nb_characters
+                    if lines[i] == lines[j]:
+                        if words[i] == words[j]:
+                            if chars[i] == chars[j]:
+                                # open those files again with same function() - saves stack space for big requests
+                                # think is to be valid since we only do that for potential matches
+                                if same(paths[i], paths[j]):
+                                    nb_matched += 1
+                                    validated[i] = True
+                                    validated[j] = True
+                                    similar.append(paths[j])
+            if len(similar) != 1:
+                cleaned = []
+                # clean up the output
+                for sim in similar:
+                    sim = sim[rootlen:]
+                    cleaned.append(sim)
+                cleaned.append(len(cleaned)) 
+                matches.append(cleaned)
 
 
-    return all_matches
+    return matches
+
+def grep(regex, path):
+    pattern = regex
+    result = ""
+
+    f = open(path, "r")
+    for line in f:
+        lineContains = re.search(regex, line)
+        if lineContains: result += line
+    f.close()
+    return result
+    std._err_ = "Invalid Path: {}".format(path) 
 
 
 # def tree(path):
