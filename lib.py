@@ -145,6 +145,9 @@ def regexValidation(regex):
 
 def extractRegex(words, i):
     regEnd_index = 0
+
+    # allows us to find the end of the regular expression.
+    # further error handling later on in the process
     for l in range(i+1, len(words) - 1):
         last_char = words[l][-1]
         if last_char == "\"" or last_char == "'":

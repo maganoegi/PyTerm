@@ -164,14 +164,16 @@ def parse_words(words):
         elif word == "tree":
             path = ""
             incr = 0
-            if not nextArgExists(i, words):
+
+            doesNextExist = nextArgExists(i, words)
+
+            if not doesNextExist or (doesNextExist and (words[i + 1] == ">" or words[i + 1] == "|")): # argumentless
                 path = "."
             else:
                 path = words[i + 1]
                 incr = 1
 
-            print(path)
-            std._out_ = cmd.tree(path, 0, [])
+            std._out_ = path + ENDLINE + cmd.tree(path, [])
             i += incr
         
         elif word == "find":
@@ -238,7 +240,6 @@ def parse_words(words):
             if isNotArgumented(words[i:]): break # TODO: include errorMessage into isNotArgumented() calls
             results = cmd.duplicate(words[i + 1])
 
-            # print(results)
             res_string = ""
             for result in results:
                 res_string += "Duplicates: " + str(result[-1]) + SPACE

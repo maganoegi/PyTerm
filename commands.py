@@ -221,7 +221,7 @@ def duplicate(basePath):
     for i in range(len(lines) - 1):
         if not validated[i]:
             nb_matched = 0
-            similar = [ paths[i] ]
+            similar = [ (paths[i])[rootlen:] ]
             for j in range(i+1, len(lines)):
                 if not validated[j]:
                 # once nb_lines match, we compare the nb_words, and if those match, we see the nb_characters
@@ -234,16 +234,10 @@ def duplicate(basePath):
                                     nb_matched += 1
                                     validated[i] = True
                                     validated[j] = True
-                                    similar.append(paths[j])
-            if len(similar) != 1:
-                cleaned = []
-                # clean up the output
-                for sim in similar:
-                    sim = sim[rootlen:]
-                    cleaned.append(sim)
-                cleaned.append(len(cleaned)) 
-                matches.append(cleaned)
-
+                                    similar.append((paths[j])[rootlen:])
+            if nb_matched > 0:
+                similar.append(len(similar)) 
+                matches.append(similar)
 
     return matches
 
@@ -274,38 +268,37 @@ def find(regex, path):
     return result
 
 
-def getPrefix(level, isLast, middleModifiers):
+def getPrefix(isLast, middleModifiers):
+    # different symbols used in tree generation
     T = "├"
     L = "└"
     I = "│"
     B = "─"
-
 
     prefix = ""
     middle_prefix = (I + 3 * lib.SPACE)
     outer_prefix = (4 * lib.SPACE)
 
     for l in range(len(middleModifiers)):
-        if middleModifiers[l]:
+        has_element_behind_it = middleModifiers[l]
+        if has_element_behind_it:
             prefix += middle_prefix
         else:
             prefix += outer_prefix
 
-    result = prefix + (L if isLast else T) + (2 * B) + lib.SPACE
-    # outer = (level * (I + 3 * lib.SPACE)) + (L if isLast else T) + (2 * B) + lib.SPACE
+    return prefix + (L if isLast else T) + (2 * B) + lib.SPACE
 
-    return result
-    # return middle if middleModifier else outer
 
-def tree(path, level, middleModifiers):
+def tree(path, middleModifiers):
     result = ""
 
     # avoid listing folders which need permissions
     try:
-        myMods = middleModifiers
+        myMods = middleModifiers # allow us to track what's "behind" the sub-item: allows us to assemble the right prefix
         raw_contents = os.listdir(path)
         contents = []
         
+        # avoids listing files and directories that start with . ( .gitignore, .bashrc, .git, etc...)
         for rc in raw_contents:
             if rc[0] != ".":
                 contents.append(rc)
@@ -313,95 +306,35 @@ def tree(path, level, middleModifiers):
 
         if len(contents) != 0:
             for i in range(len(contents)):
-
                 current_item = contents[i]
                 current_path = os.path.join(path, current_item) 
 
+                # checks where the current sub-element is with relation to its peers position-wise:
+                # if he has other elements behind it, or not
+                # NOTE: relations are visible with bigger trees
                 isLast = i == (len(contents) - 1)
                 isFirst = (i == 0)
-                isMiddle = False
+                isMiddle = False # just for init - keeps the value if the sub-element is alone in a dir
 
-                if len(contents) > 2:
+                
+                if len(contents) > 2: # when 3 or more elements, last one does not have to be connected to the one under it
                     isMiddle = not isLast
-                elif len(contents) == 2:
+                elif len(contents) == 2: # same for 2 elements
                     isMiddle = isFirst
 
 
                 if os.path.isdir(current_path):
+                    # when the item is a directory, we print IT, and recursively ITS contents...
+                    result += getPrefix(isLast, myMods) + lib.BOLD + current_item + lib.END + lib.ENDLINE
 
-                    result += getPrefix(level, isLast, myMods) + lib.BOLD + current_item + lib.END + lib.ENDLINE
-                    
                     futureMods = myMods.copy()
                     futureMods.append(isMiddle)
-                    result += tree(current_path, level + 1, futureMods)
+                    result += tree(current_path, futureMods)
                 else:
-                    result += getPrefix(level, isLast, myMods) + current_item + lib.ENDLINE
+                    # and the regular files are printed normally
+                    result += getPrefix(isLast, myMods) + current_item + lib.ENDLINE
     except:
         pass
 
     return result
     
-
-
-
-    # for root, dirs, files in os.walk(path):
-    #     print(getPrefix(root, False) + "/" + root)
-    #     item_counter = 0
-    #     max_items = len(files) + len(dirs)
-    #     isLast = False
-
-    #     for file in files:
-            
-    #         # print(file)
-    #         # print(index)
-    #         if item_counter == max_items - 1: isLast = True
-    #         print(getPrefix(root, isLast) + file)
-    #         item_counter += 1
-    #     for dir in dirs:
-    #         # print(dir)
-    #         # print(index)
-    #         # if item_counter == max_items - 1: isLast = True
-    #         # print(getPrefix(root, isLast) + dir)
-    #         # item_counter += 1
-    #         tree(root + "/" + dir)
-    # print(os.listdir(path))
-            
-    #     # print("========================================")
-            
-
-
-
-
-
-        # print("==========================" + str(root) + lib.SPACE + str(lvl) + "==========================")
-        # print("Dirs: " + str(dirs))
-        # print("Files: " + str(files))
-
-
-
-
-
-            
-
-
-# def tree(path):
-#     dirCount = 0
-#     for root, dirs, files in os.walk(path):
-#         level = root.replace(path, '').count(os.sep)
-#         preindent = '├' if dirCount != 0 else ''
-#         indent = ('─' * 4 * (level)) if dirCount != 0 else ''
-        
-#         basename = "." if level == 0 else (os.path.basename(root) + "/")
-
-#         print('{}{}{}'.format(preindent + indent, "─" if dirCount != 0 else "", basename))
-#         dirCount += 1
-#         subindent = ' ' * 4 * (level)
-#         for f in files:
-#             pre = ""
-#             post = "─ "
-#             if level != 0 and dirCount: 
-#                 pre = "│"
-#                 if dirCount > 0:
-#                     pre =  "├"
-#             print('{}{}{}'.format(pre + subindent + preindent, post, f))
-        
