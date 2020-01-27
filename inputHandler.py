@@ -144,8 +144,8 @@ def parse_words(words):
                     if flag == 'l': name = "Lines" + name + str(l)
                     if flag == 'w': name = "Words" + name + str(w)
                     if flag == 'c': name = "Chars" + name + str(c)
-                    std._out_ += name + " "
-            std._out_ += "\t" + words[i] + "\n"
+                    std._out_ += name + SPACE
+            std._out_ += TAB + words[i] + ENDLINE
 
 
         elif word == "alias":
@@ -161,13 +161,18 @@ def parse_words(words):
                 cmd.alias(alias, command)
             i += 1
         
-        elif word == "tree": # TODO: tree
-            cmd.pwd()
-            if nextArgExists(i, words):
-                cmd.cd(words[i + 1])
-                i += 1
-            path = std._out_
-            cmd.tree(path)
+        elif word == "tree":
+            path = ""
+            incr = 0
+            if not nextArgExists(i, words):
+                path = "."
+            else:
+                path = words[i + 1]
+                incr = 1
+
+            print(path)
+            std._out_ = cmd.tree(path, 0, [])
+            i += incr
         
         elif word == "find":
             # Checks whether both REGEX and FILE mentionned and are valid
@@ -229,22 +234,22 @@ def parse_words(words):
 
             i += 2
         
-        elif word == "duplicate": # TODO: When more than 2 equal files, it reads them 2+ times
+        elif word == "duplicate": 
             if isNotArgumented(words[i:]): break # TODO: include errorMessage into isNotArgumented() calls
             results = cmd.duplicate(words[i + 1])
 
             # print(results)
             res_string = ""
             for result in results:
-                res_string += "Duplicates: " + str(result[-1]) + " "
+                res_string += "Duplicates: " + str(result[-1]) + SPACE
                 for k in range(len(result) - 1):
-                    res_string += result[k] + " "
-                res_string += "\n"
+                    res_string += result[k] + SPACE
+                res_string += ENDLINE
 
             std._out_ = res_string
             i += 1
         
-        elif word == "|":
+        elif word == "|": # TODO: integrate stdin 
             std._in_ = std._out_
         
         elif word == ">":

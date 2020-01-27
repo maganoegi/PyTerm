@@ -12,6 +12,9 @@ BOLD = "\033[1m"
 CYAN = "\033[96m"
 RED = "\033[91m"
 END = "\033[00m"
+ENDLINE = "\n"
+TAB = "\t"
+SPACE = " "
 
 def make_words_array(line):
     return line.split()
@@ -94,7 +97,7 @@ def process_following_words(words, callback = None, rm_recursion_flag = None):
                 else: # cat 
                     content += callback(next_word)
             else: # echo 
-                content += next_word + " "
+                content += next_word + TAB
 
             i += 1
 
@@ -148,7 +151,7 @@ def extractRegex(words, i):
             regEnd_index = l
             break
 
-    unPeeled = " ".join(words[i+1: regEnd_index + 1])
+    unPeeled = TAB.join(words[i+1: regEnd_index + 1])
 
     return unPeeled, regEnd_index
 

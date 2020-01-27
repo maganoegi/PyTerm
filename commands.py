@@ -94,14 +94,14 @@ def ls(perm = False):
     items = os.listdir()
     dir_string = ""
     file_string = ""
-    separator = "\n" if perm else " "
+    separator = lib.ENDLINE if perm else lib.SPACE
     for item in items:
         isDir = os.path.isdir(item)
 
         if perm:
             perm_val = str( oct( os.stat(item).st_mode ) )[-3:]
             perm_str = lib.permission_val_2_string(perm_val, isDir)
-            item = perm_str + " " + item
+            item = perm_str + lib.SPACE + item
 
 
         if isDir:
@@ -111,7 +111,7 @@ def ls(perm = False):
 
     output = dir_string + file_string
 
-    if not perm: output+= "\n"
+    if not perm: output+= lib.ENDLINE
     return output
 
 
@@ -266,13 +266,121 @@ def find(regex, path):
 
     result = ""
 
-    for root, dirs, files in os.walk(myRoot):
-
+    for root, dirs, files in os.walk(path):
         for file_path in files:
             pathContains = re.search(regex, file_path)
-            if pathContains: result += (root + "/" + file_path + "\n")[rootlen:]
+            if pathContains: result += (root + "/" + file_path + lib.ENDLINE)
     
     return result
+
+
+def getPrefix(level, isLast, middleModifiers):
+    T = "├"
+    L = "└"
+    I = "│"
+    B = "─"
+
+
+    prefix = ""
+    middle_prefix = (I + 3 * lib.SPACE)
+    outer_prefix = (4 * lib.SPACE)
+
+    for l in range(len(middleModifiers)):
+        if middleModifiers[l]:
+            prefix += middle_prefix
+        else:
+            prefix += outer_prefix
+
+    result = prefix + (L if isLast else T) + (2 * B) + lib.SPACE
+    # outer = (level * (I + 3 * lib.SPACE)) + (L if isLast else T) + (2 * B) + lib.SPACE
+
+    return result
+    # return middle if middleModifier else outer
+
+def tree(path, level, middleModifiers):
+    result = ""
+
+    # avoid listing folders which need permissions
+    try:
+        myMods = middleModifiers
+        raw_contents = os.listdir(path)
+        contents = []
+        
+        for rc in raw_contents:
+            if rc[0] != ".":
+                contents.append(rc)
+
+
+        if len(contents) != 0:
+            for i in range(len(contents)):
+
+                current_item = contents[i]
+                current_path = os.path.join(path, current_item) 
+
+                isLast = i == (len(contents) - 1)
+                isFirst = (i == 0)
+                isMiddle = False
+
+                if len(contents) > 2:
+                    isMiddle = not isLast
+                elif len(contents) == 2:
+                    isMiddle = isFirst
+
+
+                if os.path.isdir(current_path):
+
+                    result += getPrefix(level, isLast, myMods) + lib.BOLD + current_item + lib.END + lib.ENDLINE
+                    
+                    futureMods = myMods.copy()
+                    futureMods.append(isMiddle)
+                    result += tree(current_path, level + 1, futureMods)
+                else:
+                    result += getPrefix(level, isLast, myMods) + current_item + lib.ENDLINE
+    except:
+        pass
+
+    return result
+    
+
+
+
+    # for root, dirs, files in os.walk(path):
+    #     print(getPrefix(root, False) + "/" + root)
+    #     item_counter = 0
+    #     max_items = len(files) + len(dirs)
+    #     isLast = False
+
+    #     for file in files:
+            
+    #         # print(file)
+    #         # print(index)
+    #         if item_counter == max_items - 1: isLast = True
+    #         print(getPrefix(root, isLast) + file)
+    #         item_counter += 1
+    #     for dir in dirs:
+    #         # print(dir)
+    #         # print(index)
+    #         # if item_counter == max_items - 1: isLast = True
+    #         # print(getPrefix(root, isLast) + dir)
+    #         # item_counter += 1
+    #         tree(root + "/" + dir)
+    # print(os.listdir(path))
+            
+    #     # print("========================================")
+            
+
+
+
+
+
+        # print("==========================" + str(root) + lib.SPACE + str(lvl) + "==========================")
+        # print("Dirs: " + str(dirs))
+        # print("Files: " + str(files))
+
+
+
+
+
             
 
 
