@@ -22,22 +22,21 @@ SPACE = " "
 def split_lines(input_line):
     # due to lack of time only the ";" and "\n" as separate words are respected.
 
-    words = input_line.split()
     independent_lines = []
-    starter = 0
-    breakers = [";"]
-    which_breaker = ""
-    for index, word in enumerate(words):
-        if word in breakers:
-            independent_lines.append(SPACE.join(words[starter:index]))
-            starter = index
+    words = input_line.split()
+    line = []
+    breakers = 0
+    for word in words:
+        if word != ";":
+            line.append(word)
+        else:
+            independent_lines.append(SPACE.join(line))
+            line = []
+            breakers += 1
 
-    if starter < (len(words) - 1) and starter > 0:
-        independent_lines.append(SPACE.join(words[starter:]))
-    
-    if len(independent_lines) == 0:
-        independent_lines.append(input_line)
-    
+    if breakers != len(independent_lines) - 1:
+        independent_lines.append(SPACE.join(line))
+
     return independent_lines
         
 
