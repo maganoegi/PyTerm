@@ -98,7 +98,7 @@ Another nice thing I would have loved to do is to think about a way to avoid the
 
 Noteworthy commands were: __duplicate__ for the search for the optimal way to find matches, __wc__ for flag handling, __rm/mv/touch__ for my first experience with callbacks in python, and ofcourse __tree__, which was my favorite part of this project. I wanted to have it exactly like in bash, and I managed to achieve that.
 
-I am a bit dissapointed that I did not have enough time to finish the project entirely (pipe, smarter separation with ;), but I have learned A LOT for the projects to come. And since Python has become my go-to language, this experience is very valuable.
+I am a bit dissapointed that I did not have enough time to finish the project entirely (pipe, smarter separation with ;" ), but I have learned A LOT for the projects to come. And since Python has become my go-to language, this experience is very valuable.
 
 ## Conclusion
 Very enriching project, best way to understand what is happening behind the schemes of a shell, even though the project's scope is limited. It's a pleasure to work with Python, and I would love to master this language entirely.
