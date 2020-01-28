@@ -55,7 +55,7 @@ def parse_words(words):
                 i += incr 
                 
             
-            elif word == "mv": # TODO: path validation
+            elif word == "mv":
                 # Checks whether both SOURCE and DESTINATION mentionned and are valid
                 nextArgExists(i, words, "Please provide 2 arguments: SOURCE + DESTINATION")
                 nextArgExists(i+1, words, "Please provide second argument: DESTINATION")
@@ -179,8 +179,8 @@ def parse_words(words):
             
             elif word == "find":
                 # Checks whether both REGEX and FILE mentionned and are valid
-                nextArgExists(i, words, "Please respect the following format: find REGEX FILE")
-                nextArgExists(i+1, words, "Missing the FILENAME argument")
+                nextArgExists(i, words, "Please respect the following format: find REGEX SOURCE")
+                nextArgExists(i+1, words, "Missing the SOURCE argument")
                 
                 unPeeled, regEnd_index = extractRegex(words, i) # with ""
                 

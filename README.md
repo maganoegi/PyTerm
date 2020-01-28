@@ -83,9 +83,25 @@ Another file, __.platonovrc__, imitates the function of __.bashrc__. It is gener
 
 The general idea is: a line is decomposed into "words". These words then are parsed one by one, checking whether they are a valid command. If "flags" are possible, the "words" that follow are checked as well, in order to include them into the expression. If at any point an error is encountered, __stderr__ is written to and the program stops - not without displaying what the error is! If a command is run successfully, the output is written to the __stdout__.
 
+If a __;__ separator is present, line is decomposed into lines. Then we process each line as mentioned above.
+
 Once a line has been processed without fail and the resulting __stdout__ is printed onto the terminal (provided it's not empty).
 
 The library used for system operations is python's __os__ library.
+
+# Reflections
+
+## Difficulties
+I did not have enough time to implement the __pipe__ functionality. Due to time constraints I decided to do the rest of the functionalities well enough, and leave piping to the last - seen that it's relatively simple and requires funnelling of stdout into stdin, which then needs to be taken as an input if it's not empty.
+
+Another nice thing I would have loved to do is to think about a way to avoid the huge if-elif-else sequence in inputHandler.py. Since switch-case does not exist in Python, this was the best option at the time. Maybe POO functionality could have provided a better solution. To be explored.
+
+Noteworthy commands were: __duplicate__ for the search for the optimal way to find matches, __wc__ for flag handling, __rm/mv/touch__ for my first experience with callbacks in python, and ofcourse __tree__, which was my favorite part of this project. I wanted to have it exactly like in bash, and I managed to achieve that.
+
+I am a bit dissapointed that I did not have enough time to finish the project entirely (pipe, smarter separation with ;), but I have learned A LOT for the projects to come. And since Python has become my go-to language, this experience is very valuable.
+
+## Conclusion
+Very enriching project, best way to understand what is happening behind the schemes of a shell, even though the project's scope is limited. It's a pleasure to work with Python, and I would love to master this language entirely.
 
 
 
