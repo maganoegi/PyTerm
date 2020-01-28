@@ -10,7 +10,6 @@ class NotArgumentedException(Exception):
     pass
 
 
-
 # Color Variables
 BOLD = "\033[1m"
 CYAN = "\033[96m"
@@ -19,6 +18,29 @@ END = "\033[00m"
 ENDLINE = "\n"
 TAB = "\t"
 SPACE = " "
+
+def split_lines(input_line):
+    # due to lack of time only the ";" and "\n" as separate words are respected.
+
+    words = input_line.split()
+    independent_lines = []
+    starter = 0
+    breakers = [";"]
+    which_breaker = ""
+    for index, word in enumerate(words):
+        if word in breakers:
+            independent_lines.append(SPACE.join(words[starter:index]))
+            starter = index
+
+    if starter < (len(words) - 1) and starter > 0:
+        independent_lines.append(SPACE.join(words[starter:]))
+    
+    if len(independent_lines) == 0:
+        independent_lines.append(input_line)
+    
+    return independent_lines
+        
+
 
 def make_words_array(line):
     return line.split()
@@ -32,15 +54,11 @@ def nextArgExists(i_now, array, message = None):
         return exists
 
 
-def isPathValid(path):
-    pass
 
 def this_after_redirect_pipe(i, words):
     sentence_length = len(words)
     if next_x_ArgsExist(i, -2, words):
         print("Check")
-    # if (i-1) >= 0:
-    #     if words 
 
 def permission_val_2_string(str, isDir = False):
     permission = "d" if isDir else "-"

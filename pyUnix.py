@@ -16,11 +16,16 @@ if __name__ == '__main__':
 
         reset_std_vars()
 
-        line = input("?> ")
+        _input_ = input("?> ")
+        
+        lines = split_lines(_input_)
 
-        words = make_words_array(line)
+        for line in lines:
+            words = make_words_array(line)
 
-        parse_words(words)
+            parse_words(words)
 
-        print_output()
+            print_output()
+
+
 

@@ -256,10 +256,7 @@ def parse_words(words):
                 content = std._out_
                 cmd.touch(words[i + 1], content)
                 i += 1
-
-
-            elif word == ";":
-                pass  
+ 
 
             elif word == "all-cmd":
                 print("exit\npwd\ncd\nmkdir\nrm\nmv\nls [-l]\necho\ncat\ntouch\ncp\nwc\nalias\ntree\nfind\ngrep\nsame\nduplicate\n|\n>\n;\n")        

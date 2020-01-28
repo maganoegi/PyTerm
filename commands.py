@@ -131,7 +131,6 @@ def wc(path, std = False):
     l_count = 0
     w_count = 0
     c_count= 0
-    # if std:
     with open(path, 'r') as file:
         for line in file:
             l_count += 1

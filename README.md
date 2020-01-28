@@ -135,9 +135,9 @@ Here is a list of commands that my shell supports, as well as a short descriptio
 
 #### Special Connectors
 
-* __|__ allows to create a pipeline for stdout of one expression to the stdin of another. (NOT IMPLEMENTED)
+* __|__ allows to create a pipeline for stdout of one expression to the stdin of another. (NOT IMPLEMENTED - no time to branch stdin to the rest of commands due to timeline)
     * ``` cat hello.txt | wc -c ```
 * __>__ writes/redirects the stdout of an expression into a file
     * ``` ls -l > contents.txt ```
-* __;__ allows for separation of independent expressions, written in one line 
+* __;__ allows for separation of independent expressions, written in one line (needs to have spaces around it in my implementation)
 
