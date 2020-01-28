@@ -17,15 +17,7 @@ def exit():
 
 
 def cd(path):
-    try:
-        os.chdir(path)
-    except FileNotFoundError():
-        std._err_ = "Invalid Path: {}".format(path)
-    except PermissionError():
-        std._err_ = "You Do Not Have Permission To Access: {}".format(path)
-    except NotADirectoryError():
-        std._err_ = "{} Is Not A Directory".format(path)
-
+    os.chdir(path)
 
 def mkdir(path):
     try:
@@ -86,6 +78,8 @@ def rm(path, recursive):
         else:
             # In case a recursive call is called on a file
             os.remove(path)
+    elif not recursive and os.path.isdir(path):
+        std._err_ += "please use the -r flag to delete a directory"
     else:
         os.remove(path)
 
@@ -186,8 +180,6 @@ def duplicate(basePath):
     # initialization
     paths = []
 
-    ignored = 0
-
     lines = []
     words = []
     chars = []
@@ -213,7 +205,6 @@ def duplicate(basePath):
                 f.close()
 
             except: # if files cannot be parsed by .read() - we skip them.
-                ignored += 1
                 pass 
 
 

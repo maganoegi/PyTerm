@@ -6,6 +6,10 @@ import std
 import os
 import json
 
+class NotArgumentedException(Exception):
+    pass
+
+
 
 # Color Variables
 BOLD = "\033[1m"
@@ -19,9 +23,14 @@ SPACE = " "
 def make_words_array(line):
     return line.split()
 
-def nextArgExists(i_now, array):
+def nextArgExists(i_now, array, message = None):
     target = i_now + 1
-    return (target < len(array)) and target >= 0 
+    exists = (target < len(array)) and target >= 0
+    if not exists and message:
+        raise NotArgumentedException(message)
+    else: 
+        return exists
+
 
 def isPathValid(path):
     pass
@@ -72,16 +81,12 @@ def reset_std_vars():
     std._out_ = ""
     std._err_ = ""
 
-def isNotArgumented(words):
-    contains_arguments = nextArgExists(0, words)
-    std._err_ = "Please provide at least one argument\n See bash --help" if not contains_arguments else ""
-    return not contains_arguments
 
 
 def process_following_words(words, callback = None, rm_recursion_flag = None):
     i = 0
     content = ""
-    while nextArgExists(i, words):
+    while nextArgExists(i, words, ""):
         j = i+1
         next_word = words[j]
 
@@ -107,7 +112,7 @@ def count_flags(words):
     qty_flags = 0
     flags = []
     for i in range(len(words)):
-        if nextArgExists(i, words) and words[i+1][0] == "-" and len(words[i+1]) > 1:
+        if nextArgExists(i, words, "") and words[i+1][0] == "-" and len(words[i+1]) > 1:
             qty_flags += 1
             flags.append(words[i+1])
         else: 
